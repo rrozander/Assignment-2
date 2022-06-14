@@ -1,3 +1,4 @@
+from h11 import Data
 from erd import *
 from table import *
 
@@ -10,5 +11,107 @@ from table import *
 #
 # @TODO: Implement me!
 def convert_to_table( erd ):
-    return Database([])
-    # return sample_db
+  
+  table_list = []
+
+  for entity in erd.entity_sets:
+    ent_table = Table(entity.name, set(entity.attributes), set(entity.primary_key), set())
+    table_list.append(ent_table)
+
+  for relationship in erd.relationships:
+    entity_list = entities_for_relationship(erd, relationship)
+
+    one_ent_list = []
+    one_ent = []
+    many_ent_list = []
+    many_ent = []
+
+    if entity_list[0] != []:
+      one_ent_list = entity_list[0]
+      one_ent = one_ent_list[0]
+    
+    if entity_list[1] != []:
+      many_ent_list = entity_list[1]
+      many_ent = many_ent_list[0] # Might need to loop through
+
+    if one_ent_list == []:
+      # Many-Many Relationship
+      rel_table = create_relationship_table(relationship, many_ent_list)
+      table_list.append(rel_table)
+
+    else:      
+      # Many-One Relationship
+
+      if relationship.primary_key == []:
+        # No Table for relationship
+
+        for table in table_list:
+          if many_ent.name == table.name:
+            table.foreign_keys = make_foreign_key(one_ent.name, one_ent.primary_key)
+            for pk in one_ent.primary_key:
+              table.attributes.add(pk)
+            for rel_attribs in relationship.attributes:
+              table.attributes.add(rel_attribs)
+
+      else:
+        # Table for relationship
+
+        rel_table = create_relationship_table(relationship, [one_ent, many_ent])
+        # remove one_ent.pk from rel_table
+        rel_table.primary_key.difference_update(one_ent.primary_key)
+        table_list.append(rel_table)
+          
+  
+  data = Database(table_list)
+
+  # print("\n"+"\n".join([str(val) for val in data.tables]))
+
+  return data
+
+def entities_for_relationship(erd , relationship):
+  entity_list = []
+  many_entities = []
+  one_entities = []
+
+  for entity in erd.entity_sets:
+    if entity.parents == [] and entity.supporting_relations == []:
+      # Relationship is either many-many or many-one.
+      for connection in entity.connections:
+        connect_name = connection[0]
+        connect_type = connection[1]
+        if connect_name == relationship.name:
+          if connect_type == Multiplicity.ONE:
+            one_entities.append(entity)
+          if connect_type == Multiplicity.MANY:
+            many_entities.append(entity)
+
+  # if many_entities != []:
+  #   print(relationship.name+" MANY: "+many_entities[0].name)
+  # if one_entities != []:   
+  #   print(relationship.name+" ONE: "+one_entities[0].name)
+
+  # entity_list[0] == ONE entities
+  # entity_list[1] == MANY entities
+  entity_list.append(one_entities)
+  entity_list.append(many_entities)
+  return entity_list
+
+
+def create_relationship_table(relationship, entity_list):
+  # Many-Many, adds entities as fk and entity.pk to relationship.pk
+  attribs = relationship.attributes
+  pk = relationship.primary_key
+  fk = set()
+
+  for entity in entity_list:
+    attribs += entity.primary_key 
+    pk += entity.primary_key
+    fk = fk.union(make_foreign_key(entity.name, entity.primary_key))
+  
+  rel_table = Table(relationship.name, set(attribs), set(pk), fk)
+  return rel_table
+
+
+
+def make_foreign_key(table_name, pk):
+  return set([(tuple(pk), table_name, tuple(pk))])
