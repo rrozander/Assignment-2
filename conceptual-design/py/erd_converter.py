@@ -116,7 +116,17 @@ def regular_relationship(relationship, entity_list, table_list):
     many_ent_list = entity_list[1]
     many_ent = many_ent_list[0] # Might need to loop through
 
-  if one_ent_list == []:
+  if len(many_ent_list) == 2 and one_ent_list != []:
+  # Many-Many-One Relationship
+    one_ent = one_ent_list[0]
+    rel_table = create_relationship_table(relationship, many_ent_list)
+    rel_table.foreign_keys = rel_table.foreign_keys.union(make_foreign_key(one_ent.name, one_ent.primary_key))
+    for pk in one_ent.primary_key:
+      rel_table.attributes.add(pk)
+
+    table_list.append(rel_table)
+
+  elif one_ent_list == []:
   # Many-Many Relationship
     rel_table = create_relationship_table(relationship, many_ent_list)
     table_list.append(rel_table)
