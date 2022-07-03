@@ -5,5 +5,11 @@
 -- 1.0 marks: <9 operators
 -- 0.8 marks: correct answer
 
-
--- Replace this comment line with the actual query
+SELECT `abbr`
+FROM `state`
+WHERE id NOT IN
+	(SELECT C1.state
+	FROM `county` C1, `county` C2
+	WHERE C1.fips <> C2.fips
+	AND C1.name = C2.name)
+ORDER BY `abbr`

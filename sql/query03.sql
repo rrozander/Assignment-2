@@ -5,4 +5,6 @@
 -- 1.0 marks: <4 operators
 -- 0.8 marks: correct answer
 
--- Replace this comment line with the actual query
+SELECT *
+FROM `county`
+WHERE `sq_km` > `avg_income` AND `precip` > `temp`
