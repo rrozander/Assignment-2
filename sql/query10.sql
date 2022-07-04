@@ -5,4 +5,5 @@
 -- 0.9 marks: <5 operators
 -- 0.8 marks: correct answer
 
--- Replace this comment line with the actual query
+SELECT MAX(`labour_force`)
+FROM `countylabourstats`
