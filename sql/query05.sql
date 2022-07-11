@@ -7,4 +7,9 @@
 -- 1.0 marks: <15 operators
 -- 0.8 marks: correct answer
 
--- Replace this comment line with the actual query
+SELECT `name`, `abbr`, `labour_force`, (`unemployed`/`labour_force`)*100 AS 'Unemployment Rate'
+FROM `countylabourstats`
+	JOIN `county` ON (`county` = `fips`)
+    JOIN `state` ON (`state` = `id`)
+WHERE `year`=2008 AND (`unemployed`/`labour_force`) > 0.1
+ORDER BY `labour_force` DESC
