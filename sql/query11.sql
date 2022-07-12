@@ -8,4 +8,11 @@
 -- 0.8 marks: correct answer
 
 
--- Replace this comment line with the actual query
+SELECT `abbr`
+FROM `county`
+    JOIN `countylabourstats` ON (`county` = `fips`)
+    JOIN `state` ON (`state` = `id`)
+WHERE `year`= 2008 AND (`unemployed`/`labour_force`) > 0.06 
+GROUP BY `state`
+HAVING COUNT(`county`)> 100
+ORDER BY `abbr`
