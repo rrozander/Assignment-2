@@ -6,4 +6,13 @@
 -- 0.8 marks: correct answer
 
 
--- Replace this comment line with the actual query
+WITH sq1 AS (
+SELECT COUNT(*) AS `cnt`
+FROM 
+(SELECT *
+FROM `genderbreakdown`
+GROUP BY `county`
+HAVING population/SUM(population) > 0.5) AS sq)
+
+SELECT `cnt`/COUNT(*) AS `Fraction`
+FROM `county`, sq1

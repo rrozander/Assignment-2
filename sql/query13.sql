@@ -4,4 +4,9 @@
 -- 1.0 marks: <8 operators
 -- 0.8 marks: correct answer
 
--- Replace this comment line with the actual query
+SELECT `abbr`
+FROM `county`
+	JOIN `state` ON `state` = `id`
+GROUP BY `state`
+HAVING COUNT(*)>=100
+ORDER BY `abbr`
