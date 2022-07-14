@@ -6,4 +6,11 @@
 -- 0.8 marks: correct answer
 
 
--- Replace this comment line with the actual query
+SELECT `name`, c1.`population` AS `2010`, c2.`population` AS `2019`, `abbr`, ((c1.`population`-c2.`population`)/c1.`population`)*100 AS `Loss (%)`
+FROM `countypopulation` c1
+	LEFT JOIN`countypopulation` c2 ON c1.`county` = c2.`county`
+    JOIN `county` ON c1.`county` = `fips`
+    JOIN `state` ON `state` = `id`
+WHERE c1.`year` = 2010 AND c2.`year` = 2019 
+ORDER BY `Loss (%)` DESC
+LIMIT 1
