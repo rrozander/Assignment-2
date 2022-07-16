@@ -7,4 +7,10 @@
 -- 0.9 marks: <15 operators
 -- 0.8 marks: correct answer
 
--- Replace this comment line with the actual query
+SELECT `name`, `abbr`, `dem`, `gop`, `total_votes`
+FROM `electionresult`
+	JOIN `county` ON `county` = `fips`
+    JOIN `state` ON `state` = `id`
+WHERE `total_votes` > 10000 AND `year` = 2016
+ORDER BY (`dem`/`total_votes`)*(`gop`/`total_votes`)
+LIMIT 15
