@@ -4,25 +4,18 @@
 -- 1.0 marks: < 11 operators
 -- 0.8 marks: correct answer
 
-SELECT sq2.abbr, sq2.TotalEmployees
-FROM 
-	(SELECT `abbr`, SUM(`employees`) AS 'TotalEmployees'
-	FROM (SELECT `county`, `employees`
-				FROM `countyindustries`
-				WHERE `industry` =	(SELECT `id` FROM `industry` WHERE `name` = 'Educational services')) AS sq
-		JOIN `county` ON (`county` = `fips`)
-		JOIN `state` ON (`state` = `id`)
-	GROUP BY `state`
-	ORDER BY `TotalEmployees`) AS sq2,  
-    
-	(SELECT `abbr`, SUM(`employees`) AS 'TotalEmployees'
-	FROM (SELECT `county`, `employees`
-				FROM `countyindustries`
-				WHERE `industry` =	(SELECT `id` FROM `industry` WHERE `name` = 'Educational services')) AS sq
-		JOIN `county` ON (`county` = `fips`)
-		JOIN `state` ON (`state` = `id`)
-	GROUP BY `state`
-	ORDER BY `TotalEmployees`) AS sq3
-    
-GROUP BY sq2.TotalEmployees 
-HAVING SUM(SIGN(1-SIGN(sq3.TotalEmployees-sq2.TotalEmployees))) = (COUNT(*)+1)/2
+WITH sq AS (
+SELECT `abbr`, SUM(`employees`) AS `TotalEmployees`
+FROM `countyindustries`
+	JOIN `county` ON `county` = `fips`
+    JOIN `state` s ON `state` = s.`id`
+    JOIN `industry` i ON `industry` = i.`id`
+WHERE i.`name` = 'Educational Services'
+GROUP BY `state`, `industry`
+ORDER BY `TotalEmployees`
+)
+
+SELECT q1.`abbr`, q1.`TotalEmployees`
+FROM sq q1, sq q2
+GROUP BY q1.`TotalEmployees`
+HAVING SUM(SIGN(1-SIGN(q2.`TotalEmployees`-q1.`TotalEmployees`))) = (COUNT(*)+1)/2

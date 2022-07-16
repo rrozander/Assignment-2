@@ -7,9 +7,11 @@
 -- 1.0 marks: <15 operators
 -- 0.8 marks: correct answer
 
-SELECT `name`, `abbr`, `labour_force`, (`unemployed`/`labour_force`)*100 AS 'Unemployment Rate'
-FROM `countylabourstats`
-	JOIN `county` ON (`county` = `fips`)
-    JOIN `state` ON (`state` = `id`)
-WHERE `year`=2008 AND (`unemployed`/`labour_force`) > 0.1
-ORDER BY `labour_force` DESC
+SELECT `abbr`
+FROM `state`
+WHERE `id` NOT IN
+	(SELECT C1.`state`
+	FROM `county` C1, `county` C2
+	WHERE C1.`fips` <> C2.`fips`
+	AND C1.`name` = C2.`name`)
+ORDER BY `abbr`

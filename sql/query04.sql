@@ -7,9 +7,9 @@
 
 SELECT `abbr`
 FROM `state`
-WHERE id NOT IN
-	(SELECT C1.state
+WHERE `id` NOT IN
+	(SELECT C1.`state`
 	FROM `county` C1, `county` C2
-	WHERE C1.fips <> C2.fips
-	AND C1.name = C2.name)
+	WHERE C1.`fips` <> C2.`fips`
+	AND C1.`name` = C2.`name`)
 ORDER BY `abbr`

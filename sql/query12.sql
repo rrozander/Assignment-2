@@ -16,5 +16,5 @@ WHERE `county` NOT IN (
 	WHERE `abbr` = 'CA'
 )
 GROUP BY `industry`
-HAVING SUM(`employees`)> 5000000
+HAVING SUM(`employees`) > 5000000
 ORDER BY `name`

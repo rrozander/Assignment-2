@@ -8,5 +8,5 @@ SELECT `abbr`
 FROM `county`
 	JOIN `state` ON `state` = `id`
 GROUP BY `state`
-HAVING COUNT(*)>=100
+HAVING COUNT(*) >= 100
 ORDER BY `abbr`

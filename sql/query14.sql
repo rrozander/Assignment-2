@@ -14,8 +14,8 @@ FROM `countypopulation`
 	JOIN `state` ON `state` = `id`
 WHERE `population`>25000 AND `year`=2018)
 
-SELECT q1.name, q1.population, q2.name, q2.population
+SELECT q2.`name`, q2.`population`, q1.`name`, q1.`population`
 FROM sq q1
-	JOIN sq q2 ON q1.county <> q2.county AND q1.state = q2.state
-ORDER BY ABS(q1.population - q2.population)
+	JOIN sq q2 ON q1.`county` <> q2.`county` AND q1.`state` = q2.`state`
+ORDER BY ABS(q1.`population` - q2.`population`)
 LIMIT 1
