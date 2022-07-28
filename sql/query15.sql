@@ -5,15 +5,16 @@
 -- 0.9 marks: <13 operators
 -- 0.8 marks: correct answer
 
-
-WITH sq1 AS (
-	SELECT COUNT(*) AS `cnt`
+SELECT `females`/`total` AS 'Fraction'
+FROM 
+(SELECT
+	(SELECT COUNT(*)
 	FROM 
-		(SELECT *
-		FROM `genderbreakdown`
-		GROUP BY `county`
-		HAVING population/SUM(population) > 0.5) AS sq
-	)
-
-SELECT `cnt`/COUNT(*) AS `Fraction`
-FROM `county`, sq1
+		(SELECT gen.`county`
+		FROM `genderbreakdown` gen
+        JOIN `countypopulation` pop ON gen.`county` = pop.`county`
+        WHERE `year` = 2019 AND  `gender` = 'female' AND gen.`population`/pop.`population` > 0.5) AS sq
+	) AS females,
+	(SELECT COUNT(*)
+    FROM `county`
+    )AS total) AS sq1

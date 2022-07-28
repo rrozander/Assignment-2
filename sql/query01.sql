@@ -5,7 +5,7 @@
 -- 0.8 marks: correct answer
 
 WITH sq AS (
-SELECT `abbr`, SUM(`employees`) AS `TotalEmployees`
+SELECT ANY_VALUE(`abbr`) AS `abbr`, SUM(`employees`) AS `TotalEmployees`
 FROM `countyindustries`
 	JOIN `county` ON `county` = `fips`
     JOIN `state` s ON `state` = s.`id`
