@@ -34,12 +34,12 @@ class TestCase02(unittest.TestCase):
     def test_insertion(self):
         btree = Index(Node(\
             KeySet([99, None]),\
-            PointerSet([None]*3)))
+            PointerSet([None]*Index.FAN_OUT)))
         key = 99
 
         expected_output = Index(Node(\
             KeySet([99, None]),\
-            PointerSet([None]*3)))
+            PointerSet([None]*Index.FAN_OUT)))
 
         self.assertEqual( expected_output, ImplementMe.InsertIntoIndex( btree, key ) )
 
@@ -50,12 +50,12 @@ class TestCase03(unittest.TestCase):
     def test_insertion(self):
         btree = Index(Node(\
             KeySet([87, None]),\
-            PointerSet([None]*3)))
+            PointerSet([None]*Index.FAN_OUT)))
         key = 66
 
         expected_output = Index(Node(\
             KeySet([66, 87]),\
-            PointerSet([None]*3)))
+            PointerSet([None]*Index.FAN_OUT)))
 
         self.assertEqual( expected_output, ImplementMe.InsertIntoIndex( btree, key ) )
 
@@ -66,18 +66,21 @@ class TestCase04(unittest.TestCase):
     def test_insertion(self):
         btree = Index(Node(\
             KeySet([66, 99]),\
-            PointerSet([None]*3)))
+            PointerSet([None]*Index.FAN_OUT)))
         key = 87
 
         expected_output = Index(Node(\
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([66, None]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        expected_output.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         expected_output.root.pointers.pointers[1]
 
         self.assertEqual( expected_output, ImplementMe.InsertIntoIndex( btree, key ) )
 
@@ -128,11 +131,15 @@ class TestCase08(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([66, None]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         key = 66
 
         expected_output = True
@@ -149,11 +156,15 @@ class TestCase09(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([66, None]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         key = 99
 
         expected_output = True
@@ -172,11 +183,15 @@ class TestCase10(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([66, None]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         key = 42
 
         expected_output = False
@@ -193,11 +208,15 @@ class TestCase11(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([41, None]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         key = 66
 
         expected_output = False
@@ -212,11 +231,15 @@ class TestCase12(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([41, 66]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         key = 66
 
         expected_output = True
@@ -232,11 +255,15 @@ class TestCase13(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([41, 68]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         lower_bound = 42
         upper_bound = 66
 
@@ -253,11 +280,15 @@ class TestCase14(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([41, 68]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         lower_bound = 0
         upper_bound = 42
 
@@ -274,11 +305,15 @@ class TestCase15(unittest.TestCase):
             KeySet([87, None]),\
             PointerSet([Node(\
                 KeySet([41, 68]),\
-                PointerSet([None]*3)),\
+                PointerSet([None]*Index.FAN_OUT)),\
             Node(\
                 KeySet([87,99]),\
-                PointerSet([None]*3)
-                )])))
+                PointerSet([None]*Index.FAN_OUT)
+                ),\
+            None])))
+        btree.root.pointers.pointers[0].pointers.pointers[Index.NUM_KEYS] = \
+         btree.root.pointers.pointers[1]
+
         lower_bound = 42
         upper_bound = 1024
 
