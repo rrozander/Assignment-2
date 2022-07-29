@@ -15,7 +15,23 @@ class ImplementMe:
     # number of keys that already exist in the index.
     @staticmethod
     def InsertIntoIndex( index, key ):
+      # Return original tree if already exists
+      if (ImplementMe.LookupKeyInIndex(index, key)):
         return index
+
+      # Find where to insert key
+      cur_node = ImplementMe.findNode(index.root, key)
+      
+      # Insert into leaf
+      for idx, ele in enumerate(cur_node.keys.keys):
+        if ele == None:
+          cur_node.keys.keys[idx] = key
+          break
+      cur_node.keys.keys = ImplementMe.sortNode(cur_node.keys.keys)
+      
+
+      return index
+
 
     # Returns a boolean that indicates whether a given key
     # is found among the leaves of a B+-tree index.
@@ -24,7 +40,10 @@ class ImplementMe:
     # height of the tree
     @staticmethod
     def LookupKeyInIndex( index, key ):
-        return False
+        node = ImplementMe.findNode(index.root, key)
+        if node.keys.keys.count(key) == 0:
+          return False
+        return True
 
     # Returns a list of keys in a B+-tree index within the half-open
     # interval [lower_bound, upper_bound)
@@ -34,3 +53,32 @@ class ImplementMe:
     @staticmethod
     def RangeSearchInIndex( index, lower_bound, upper_bound ):
         return []
+
+
+    # Helper Functions:
+    def isLeafNode( node ):
+      if (node.pointers.pointers[0] == None):
+        return True
+      return False
+
+    def isNodeFull( node ):
+      if (node.keys.keys.count(None) == 0):
+        return True
+      return False
+    
+    def sortNode(list):
+      return sorted(list, key=lambda x: (x is None, x))
+
+    # returns node that key should be added to or key is inside.
+    def findNode(root, key):
+      cur_node = root 
+      while( ImplementMe.isLeafNode(cur_node) == False):
+        for idx, ele in enumerate(cur_node.keys.keys):
+          if (ele == None or ele > key):
+            cur_node = cur_node.pointers.pointers[idx]
+            break           
+          else:
+            if(idx == cur_node.get_num_keys()-1):
+              cur_node = cur_node.pointers.pointers[idx+1]
+              break
+      return cur_node
