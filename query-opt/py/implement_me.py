@@ -1,6 +1,7 @@
 # Implementation of B+-tree functionality.
 
 from index import *
+import math
 
 # You should implement all of the static functions declared
 # in the ImplementMe class and submit this (and only this!) file.
@@ -23,11 +24,46 @@ class ImplementMe:
       cur_node = ImplementMe.findNode(index.root, key)
       
       # Insert into leaf
-      for idx, ele in enumerate(cur_node.keys.keys):
-        if ele == None:
-          cur_node.keys.keys[idx] = key
-          break
-      cur_node.keys.keys = ImplementMe.sortNode(cur_node.keys.keys)
+      if ImplementMe.isNodeFull(cur_node):
+      # Overflow 
+        # new_node = Node()
+        
+        # Splits keys into current and new node
+        temp_list = cur_node.keys.keys.copy()
+        temp_list.append(key)        
+        temp_list = ImplementMe.sortNode(temp_list)
+        split_idx = math.ceil(index.NUM_KEYS/2)-1
+        new_idx = 0
+        new_node_keys = [None]*Index.NUM_KEYS
+        
+        for idx, ele in enumerate(temp_list):
+          if idx <= split_idx:
+            cur_node.keys.keys[idx] = ele
+          else:
+            new_node_keys[new_idx] = ele
+            new_idx = new_idx + 1
+        
+        for idx in range(split_idx+1,index.NUM_KEYS):
+          cur_node.keys.keys[idx] = None
+        # cur_node.pointers.pointers[index.FAN_OUT-1] = new_node
+       
+        
+        # Creates new root (cur_node is root)
+        new_node = Node(keys=KeySet(new_node_keys))
+        # cur_node.pointers.pointers[index.FAN_OUT-1] = new_node
+        cur_node = Node(keys=cur_node.keys, pointers=PointerSet([None,None,new_node]))
+        new_root = Node(keys=KeySet([new_node_keys[0],None]), pointers=PointerSet([cur_node,new_node,None]))
+        
+        newbtree = Index(root=new_root)
+        
+        return newbtree
+      else:
+      # No Overflow
+        for idx, ele in enumerate(cur_node.keys.keys):
+          if ele == None:
+            cur_node.keys.keys[idx] = key
+            break
+        cur_node.keys.keys = ImplementMe.sortNode(cur_node.keys.keys)
       
 
       return index
@@ -40,10 +76,10 @@ class ImplementMe:
     # height of the tree
     @staticmethod
     def LookupKeyInIndex( index, key ):
-        node = ImplementMe.findNode(index.root, key)
-        if node.keys.keys.count(key) == 0:
-          return False
-        return True
+      node = ImplementMe.findNode(index.root, key)
+      if node.keys.keys.count(key) == 0:
+        return False
+      return True
 
     # Returns a list of keys in a B+-tree index within the half-open
     # interval [lower_bound, upper_bound)
@@ -57,7 +93,7 @@ class ImplementMe:
 
     # Helper Functions:
     def isLeafNode( node ):
-      if (node.pointers.pointers[0] == None):
+      if (node.pointers.pointers[0] is None):
         return True
       return False
 
