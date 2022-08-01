@@ -85,11 +85,11 @@ class TestCase04(unittest.TestCase):
         key = 87
 
         leaf1 = Node(\
-            KeySet([66, None]),\
+            KeySet([87, 99]),\
             PointerSet([None]*Index.FAN_OUT))
         leaf0 = Node(\
-            KeySet([87, 99]),\
-            PointerSet([None, None, leaf1]))
+            KeySet([66, None]),\
+            PointerSet( [None, None, leaf1]))
         newRoot = Node(\
             KeySet([87, None]),\
             PointerSet([leaf0, leaf1, None]))
@@ -102,12 +102,48 @@ class TestCase04(unittest.TestCase):
 # Not shown. To be designed by student.
 class TestCase05(unittest.TestCase):
     # @timeout_decorator.timeout(25)
-    def test_insertion(self):
+    def test_insertion(self):      
+        
+        leaf2 = Node(\
+          KeySet([96, 98]),\
+          PointerSet([None, None, None]))
+        leaf1 = Node(\
+          KeySet([88, None]),\
+          PointerSet([None, None, leaf2]))
+        leaf0 = Node(\
+          KeySet([66, None]),\
+          PointerSet([None, None, leaf1]))
+        root = Node(\
+          KeySet([88, 96]),\
+          PointerSet([leaf0, leaf1, leaf2]))
 
-        btree = Index()
-        key = 99
+        btree = Index( root )
+        key = 99        
 
-        expected_output = Index()
+      
+        new_leaf3 = Node(\
+          KeySet([98, 99]),\
+          PointerSet([None, None, None]))
+        new_leaf2 = Node(\
+          KeySet([96, None]),\
+          PointerSet([None, None, new_leaf3]))
+        new_leaf1 = Node(\
+          KeySet([88, None]),\
+          PointerSet([None, None, new_leaf2]))
+        new_leaf0 = Node(\
+          KeySet([66, None]),\
+          PointerSet([None, None, new_leaf1]))
+        new_parent1 = Node(\
+          KeySet([98, None]),\
+          PointerSet([new_leaf2, new_leaf3, None]))
+        new_parent0 = Node(\
+          KeySet([88, None]),\
+          PointerSet([new_leaf0, new_leaf1, None]))
+        new_root = Node(\
+          KeySet([96, None]),\
+          PointerSet([new_parent0, new_parent1, None]))
+
+        expected_output = Index( new_root )
 
         self.assertEqual( expected_output, ImplementMe.InsertIntoIndex( btree, key ) )
 
