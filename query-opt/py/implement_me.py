@@ -126,15 +126,16 @@ class ImplementMe:
     return cur_node
 
 
-  def internalSplit(root, node, new_child):
-    key = new_child.keys.keys[0]
+  def internalSplit(root, node, new_child, key):
     # splits keys into node and new_node
     if ImplementMe.isNodeFull(node):
     # Overflow
       temp_list = node.keys.keys.copy()
       temp_list.append(key)        
       temp_list = ImplementMe.sortNode(temp_list)
+      temp_pointer_list = node.pointers.pointers.copy()
 
+      new_key_idx = temp_list.index(key)     
       split_idx = math.ceil(Index.NUM_KEYS/2)
       new_idx = 0
 
@@ -148,16 +149,33 @@ class ImplementMe:
           node.keys.keys[idx] = None
         else:
           new_node.keys.keys[new_idx] = ele
-          new_node.pointers.pointers[new_idx] = node.pointers.pointers[idx]
-          node.pointers.pointers[idx] = None
+          # new_node.pointers.pointers[new_idx] = node.pointers.pointers[idx-1]
+          # node.pointers.pointers[idx-1] = None
           if idx < Index.NUM_KEYS:
             node.keys.keys[idx] = None
           new_idx = new_idx + 1
-      new_node.pointers.pointers[split_idx] = new_child
+
+      # new_node.pointers.pointers[split_idx] = node.pointers.pointers[Index.FAN_OUT-1]
+      # node.pointers.pointers[split_idx] = new_child
+      # node.pointers.pointers[Index.FAN_OUT-1] = None
+      if new_key_idx == 0:
+        new_node.pointers.pointers[0] = node.pointers.pointers[1]
+        new_node.pointers.pointers[1] = node.pointers.pointers[2]
+        node.pointers.pointers[1] = new_child
+        node.pointers.pointers[2] = None
+      elif new_key_idx == 1:
+        new_node.pointers.pointers[0] = new_child
+        new_node.pointers.pointers[1] = node.pointers.pointers[2]
+        node.pointers.pointers[2] = None
+      else:
+        new_node.pointers.pointers[0] = node.pointers.pointers[2]
+        new_node.pointers.pointers[1] = new_child
+        node.pointers.pointers[2] = None
+
       if(node == root):
         new_root = ImplementMe.newRoot(node, new_node, parent_key)
       else:
-        new_root = ImplementMe.internalSplit(root, ImplementMe.getParent(root, node), new_node)
+        new_root = ImplementMe.internalSplit(root, ImplementMe.getParent(root, node), new_node, parent_key)
       return new_root
     else:
     # No Overflow
@@ -202,13 +220,14 @@ class ImplementMe:
           node.keys.keys[idx] = None
         new_idx = new_idx + 1
 
+    new_node.pointers.pointers[Index.FAN_OUT-1] = node.pointers.pointers[Index.FAN_OUT-1]
     node.pointers.pointers[Index.FAN_OUT-1] = new_node
 
     # Move key up tree
     if( node == root):
       new_root = ImplementMe.newRoot(node, new_node, new_node.keys.keys[0])
     else:
-      new_root = ImplementMe.internalSplit(root, ImplementMe.getParent(root, node), new_node)
+      new_root = ImplementMe.internalSplit(root, ImplementMe.getParent(root, node), new_node, new_node.keys.keys[0])
 
     return new_root
 

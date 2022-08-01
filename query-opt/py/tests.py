@@ -214,8 +214,8 @@ class TestCase06(unittest.TestCase):
             PointerSet([newParent0,newParent1,newParent2]))
         expected_output = Index(newRoot)
 
-        print(ImplementMe.InsertIntoIndex( btree, key ))
-        print(expected_output)
+        # print(ImplementMe.InsertIntoIndex( btree, key ))
+        # print(expected_output)
         self.assertEqual( expected_output, ImplementMe.InsertIntoIndex( btree, key ) )
 
 
