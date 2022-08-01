@@ -89,7 +89,7 @@ class TestCase04(unittest.TestCase):
             PointerSet([None]*Index.FAN_OUT))
         leaf0 = Node(\
             KeySet([66, None]),\
-            PointerSet( [None, None, leaf1]))
+            PointerSet([None, None, leaf1]))
         newRoot = Node(\
             KeySet([87, None]),\
             PointerSet([leaf0, leaf1, None]))
@@ -520,7 +520,7 @@ class TestCase20(unittest.TestCase):
         lower_bound = 12
         upper_bound = 13
 
-        expected_output = []
+        expected_output = [12]
 
         self.assertEqual( expected_output, ImplementMe.RangeSearchInIndex(\
         ImplementMe.InsertIntoIndex( btree, key ), lower_bound, upper_bound ) )
