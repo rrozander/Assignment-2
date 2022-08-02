@@ -186,15 +186,11 @@ class ImplementMe:
           node.keys.keys[idx] = None
         else:
           new_node.keys.keys[new_idx] = ele
-          # new_node.pointers.pointers[new_idx] = node.pointers.pointers[idx-1]
-          # node.pointers.pointers[idx-1] = None
           if idx < Index.NUM_KEYS:
             node.keys.keys[idx] = None
           new_idx = new_idx + 1
 
-      # new_node.pointers.pointers[split_idx] = node.pointers.pointers[Index.FAN_OUT-1]
-      # node.pointers.pointers[split_idx] = new_child
-      # node.pointers.pointers[Index.FAN_OUT-1] = None
+
       if new_key_idx == 0:
         new_node.pointers.pointers[0] = node.pointers.pointers[1]
         new_node.pointers.pointers[1] = node.pointers.pointers[2]
