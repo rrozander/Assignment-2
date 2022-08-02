@@ -64,21 +64,38 @@ class ImplementMe:
     node = ImplementMe.findNode(index.root, lower_bound)
     start_idx = None
 
+    if lower_bound == upper_bound:
+      if (ImplementMe.LookupKeyInIndex(index, lower_bound)):
+        return [lower_bound]
+
     for idx, lkey in enumerate(node.keys.keys):
       if lkey >= lower_bound:
         start_idx = idx
+        break
     if start_idx == None:
       return []
 
     key = node.keys.keys[start_idx]
+    if key >= upper_bound:
+      return []
     key_list = [key]
     while key < upper_bound:
       if start_idx == 0:
-        key_list.append(node.keys.keys[1])
-        start_idx += start_idx
+        key = node.keys.keys[1]
+        if key is None:
+          key = node.keys.keys[0]
+          start_idx = start_idx + 1
+          continue
+        if key < upper_bound:
+          key_list.append(key)
+        start_idx = start_idx + 1
       else:
         node = node.pointers.pointers[2]
-        key_list.append(node.keys.keys[0])
+        if node is None:
+          return key_list
+        key = node.keys.keys[0]
+        if key < upper_bound:
+          key_list.append(key)
         start_idx = 0
       
     key_list = list(filter(None, key_list))
