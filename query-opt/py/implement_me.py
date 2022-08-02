@@ -61,7 +61,28 @@ class ImplementMe:
   # of the tree and the number of leaves overlapping the interval.
   @staticmethod
   def RangeSearchInIndex( index, lower_bound, upper_bound ):
-    return []
+    node = ImplementMe.findNode(index.root, lower_bound)
+    start_idx = None
+
+    for idx, lkey in enumerate(node.keys.keys):
+      if lkey >= lower_bound:
+        start_idx = idx
+    if start_idx == None:
+      return []
+
+    key = node.keys.keys[start_idx]
+    key_list = [key]
+    while key < upper_bound:
+      if start_idx == 0:
+        key_list.append(node.keys.keys[1])
+        start_idx += start_idx
+      else:
+        node = node.pointers.pointers[2]
+        key_list.append(node.keys.keys[0])
+        start_idx = 0
+      
+    key_list = list(filter(None, key_list))
+    return key_list
 
 
   # Helper Functions:
@@ -133,7 +154,6 @@ class ImplementMe:
       temp_list = node.keys.keys.copy()
       temp_list.append(key)        
       temp_list = ImplementMe.sortNode(temp_list)
-      temp_pointer_list = node.pointers.pointers.copy()
 
       new_key_idx = temp_list.index(key)     
       split_idx = math.ceil(Index.NUM_KEYS/2)
