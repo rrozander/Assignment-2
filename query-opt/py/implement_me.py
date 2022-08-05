@@ -33,7 +33,7 @@ class ImplementMe:
     else:
       # No Overflow
       for idx, ele in enumerate(cur_node.keys.keys):
-        if ele == None:
+        if ele is None:
           cur_node.keys.keys[idx] = key
           break
       cur_node.keys.keys = ImplementMe.sortNode(cur_node.keys.keys)
@@ -72,7 +72,7 @@ class ImplementMe:
       if lkey >= lower_bound:
         start_idx = idx
         break
-    if start_idx == None:
+    if start_idx is None:
       return []
 
     key = node.keys.keys[start_idx]
@@ -126,10 +126,9 @@ class ImplementMe:
   def getParentRec(cur_node, child):
     # Basecase
     for pnt in cur_node.pointers.pointers:
-      if pnt is None:
-        continue
-      elif pnt == child:
-        return cur_node
+      if not (pnt is None):
+        if pnt == child:
+          return cur_node
 
     child_key = child.keys.keys[0]
 
@@ -214,7 +213,7 @@ class ImplementMe:
     # No Overflow
       insert_idx = 0
       for idx, ele in enumerate(node.keys.keys):
-        if ele == None:
+        if ele is None:
           node.keys.keys[idx] = key
           node.pointers.pointers[idx+1] = new_child
         elif ele > key:
